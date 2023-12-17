@@ -12,7 +12,6 @@ def receiveESPData(request):
         print(request.POST['Voltage'])
     else:
         print(request.GET['Voltage'])
-    print()
     return Response("GOT DATA")
 
 
