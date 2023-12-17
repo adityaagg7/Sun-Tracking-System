@@ -1,4 +1,5 @@
 import requests
+import Prediction
 
 def get_weather(city):
     url = f"http://api.weatherapi.com/v1/current.json?key=&q=${city}&aqi=no`;"
@@ -10,5 +11,7 @@ def get_weather(city):
         wind=data['current']['wind_kph']
         humidity=data['current']['humidity']
         weather=data['current']['condition']['text']
+        list=[barometer, temp, wind, humidity, weather]
+        return list
     else:
         return "Error occured"
