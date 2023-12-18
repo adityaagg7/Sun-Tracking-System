@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 import sys
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +29,7 @@ SECRET_KEY = 'django-insecure-+@3892h+u4w6)izx^6&xl$n1^@!*^*_&^0k(sp=iu01l^-pu^x
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_CREDENTIALS = True

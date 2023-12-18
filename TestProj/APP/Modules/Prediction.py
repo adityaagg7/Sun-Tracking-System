@@ -56,7 +56,30 @@ m = {'Sunny': 'Sunny',
      }
 
 
+from sklearn.pipeline import Pipeline 
+from sklearn.compose import ColumnTransformer 
+from sklearn.preprocessing import OneHotEncoder 
+from sklearn.impute import SimpleImputer 
+from sklearn.preprocessing import MinMaxScaler 
+
+num_attr=['temp', 'wind', 'humidity']
+cat_attr=['weather']
+num_pipeline = Pipeline([ 
+    ('imputer', SimpleImputer(strategy='median')), 
+    ('scaler', MinMaxScaler()) 
+]) 
+
+cat_pipeline = Pipeline([ 
+    ('encoder', OneHotEncoder()) 
+]) 
+
+full_pipeline = ColumnTransformer([ 
+    ('num_pipeline', num_pipeline, num_attr),
+    ('cat_pipeline', cat_pipeline, cat_attr) 
+]) 
+
 def predict_solar_power(data):
     w = m[data['weather']]
-
-    return model.predict(data['temp'], w, data['wind'], data['humidity'], data['barometer'])
+    data['weather']=w
+    preped=full_pipeline.fit_transform(data)
+    return model.predict(preped)

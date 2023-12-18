@@ -37,8 +37,13 @@ def sendVoltage(request):
 
 @api_view(['GET'])
 def sendPrediction(request):
-    city = request.GET['city']
+    print("*********************************************************************************************************************************************************************")
+
+    # city = request.GET['city']
+    city='patiala'
     parameters = WeatherForecast.get_weather(city)
+    print("*********************************************************************************************************************************************************************")
+
     predicted_wattage = Prediction.predict_solar_power(parameters)
 
     return Response(predicted_wattage)
