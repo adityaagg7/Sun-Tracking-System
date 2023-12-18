@@ -45,5 +45,5 @@ def sendPrediction(request):
     # print("*********************************************************************************************************************************************************************")
     print(parameters)
     predicted_wattage = Prediction.predict_solar_power(parameters)
-
-    return Response(predicted_wattage)
+    print(predicted_wattage)
+    return Response({'1':predicted_wattage})

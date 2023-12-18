@@ -84,4 +84,12 @@ def predict_solar_power(data):
      
      preped=full_pipeline.transform(df)
      # print(preped)
-     return model.predict(preped)  
+
+     l=model.predict(preped)  
+     ret={}
+     i=0
+     for date in data:
+          ret[i]=[date,l[i]]
+          i+=1
+     return ret
+
