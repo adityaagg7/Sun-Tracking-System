@@ -1,11 +1,15 @@
 import joblib as jb
 import os
 from TestProj.settings import BASE_DIR
-
+import numpy as np
+import pandas as pd
 model_path = os.path.join(BASE_DIR, 'APP', 'Modules', 'solar_power_prediction_model.joblib')
 model = jb.load(model_path)
+full_pipeline=jb.load(os.path.join(BASE_DIR, 'APP', 'Modules', 'pipeline.joblib'))
+
 
 m = {'Sunny': 'Sunny',
+     'Clear': 'Sunny',
      'Partly cloudy': 'Partly Sunny',
      'Cloudy': 'Cloudy',
      'Overcast': 'Cloudy',
@@ -52,7 +56,8 @@ m = {'Sunny': 'Sunny',
      'Patchy light rain with thunder': 'Passing Clouds',
      'Moderate or heavy rain with thunder': 'Scattered Clouds',
      'Patchy light snow with thunder': 'Passing Clouds',
-     'Moderate or heavy snow with thunder': 'Scattered Clouds'
+     'Moderate or heavy snow with thunder': 'Scattered Clouds',
+     'Overcast' : 'Cloudy'
      }
 
 
@@ -62,24 +67,21 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.impute import SimpleImputer 
 from sklearn.preprocessing import MinMaxScaler 
 
-num_attr=['temp', 'wind', 'humidity']
-cat_attr=['weather']
-num_pipeline = Pipeline([ 
-    ('imputer', SimpleImputer(strategy='median')), 
-    ('scaler', MinMaxScaler()) 
-]) 
 
-cat_pipeline = Pipeline([ 
-    ('encoder', OneHotEncoder()) 
-]) 
-
-full_pipeline = ColumnTransformer([ 
-    ('num_pipeline', num_pipeline, num_attr),
-    ('cat_pipeline', cat_pipeline, cat_attr) 
-]) 
 
 def predict_solar_power(data):
-    w = m[data['weather']]
-    data['weather']=w
-    preped=full_pipeline.fit_transform(data)
-    return model.predict(preped)
+     a=[]
+     for key in data:
+          data[key]['weather']=m[data[key]['weather']]
+          data[key]['date']=key
+          a.append(data[key])
+
+     # print(a)
+     df=pd.DataFrame(a)
+     # df.columns = range(df.shape[1])
+     # print(df)
+     # arr=df.to_numpy()
+     
+     preped=full_pipeline.transform(df)
+     # print(preped)
+     return model.predict(preped)  

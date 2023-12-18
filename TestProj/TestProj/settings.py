@@ -33,7 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS =['https://*','http://*']
+# CSRF_TRUSTED_ORIGINS =['https://*','http://*']
 
 CORS_ALLOW_METHODS = [
 'DELETE',

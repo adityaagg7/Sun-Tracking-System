@@ -4,19 +4,46 @@ from datetime import datetime
 from dotenv import load_dotenv
 load_dotenv() 
 WEATHER= str(os.getenv('WEATHER'))
-def get_weather(city):
-    print(WEATHER)
-    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHER}&q=${city}&aqi=no`;"
-    response = requests.get(url)
-    data = response.json()
+
+import requests
+
+def get_weather_forecast( location, days=6, aqi="no", alerts="no"):
+    base_url = "http://api.weatherapi.com/v1/forecast.json"
+    params = {
+        "key": WEATHER,
+        "q": location,
+        "days": days,
+        "aqi": aqi,
+        "alerts": alerts
+    }
+
+    response = requests.get(base_url, params=params)
+
     if response.status_code == 200:
-        barometer = data['current']['pressure_mb']
-        temp = data['current']['temp_c']
-        wind = data['current']['wind_kph']
-        humidity = data['current']['humidity']
-        weather = data['current']['condition']['text']
-        current_date = datetime.now().strftime('%Y-%m-%d')
-        parameters = { "temp": temp, "weather": weather, "wind": wind, "humidity": humidity,"date":current_date}
-        return parameters
+        weather_data = response.json()
+
+        # Extract forecast information for each day
+        forecast_dict = {}
+
+        # Extract forecast information for each day
+        for day_forecast in weather_data["forecast"]["forecastday"]:
+            date = day_forecast["date"]
+            avg_temp_c = day_forecast["day"]["avgtemp_c"]
+            max_wind_kph = day_forecast["day"]["maxwind_kph"]
+            avg_humidity = day_forecast["day"]["avghumidity"]
+            condition_text = day_forecast["day"]["condition"]["text"]
+
+            # Create a dictionary for each date
+            date_info = {
+                "temp": avg_temp_c,
+                "wind": max_wind_kph,
+                "humidity": avg_humidity,
+                "weather": condition_text
+            }
+
+            # Add the date information to the main forecast dictionary
+            forecast_dict[date] = date_info
+
+        return forecast_dict
     else:
-        return "Error occurred"
+        print(f"Error: Unable to fetch weather data. Status Code: {response.status_code}")
