@@ -7,12 +7,15 @@ from APP.models import Voltage
 
 @api_view(['GET', 'POST'])
 def receiveESPData(request):
-    v=0
+    rv=0
+    sv=0
     if request.method == 'POST':
-        v=request.POST['Voltage']
+        sv=request.POST['SVoltage']
+        rv=request.POST['RVoltage']
     else:
-        v=request.GET['Voltage']
-    Voltage.objects.create(voltage=v)
+        sv=request.GET['SVoltage']
+        rv=request.GET['RVoltage']
+    Voltage.objects.create(s_voltage=sv, r_voltage=rv)
     return Response("GOT DATA")
 
 
@@ -21,7 +24,7 @@ def sendVoltage(request):
     # num = round(random.uniform(0, 10), 2)
     v=Voltage.objects.latest('time')
     # v=1
-    return Response({'volt':v.voltage})
+    return Response({'staticVoltage':v.s_voltage,'rotationalVoltage':v.r_voltage})
 
 
 @api_view(['GET'])
