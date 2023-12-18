@@ -4,6 +4,8 @@ import random
 from Modules import WeatherForecast
 from Modules import Prediction
 from APP.models import Voltage
+import json
+from django.http import HttpResponse
 
 @api_view(['GET', 'POST'])
 def receiveESPData(request):
@@ -22,8 +24,14 @@ def receiveESPData(request):
 @api_view(['GET'])
 def sendVoltage(request):
     # num = round(random.uniform(0, 10), 2)
+    print(request.method)
+    if(request.method=='OPTIONS'):
+        print("Option")
+        response=HttpResponse()
+        response['Access-Control-Allow-Origin']='*'
     v=Voltage.objects.latest('time')
     # v=1
+    # return Response(json.dumps({'staticVoltage':v.s_voltage,'rotationalVoltage':v.r_voltage}))
     return Response({'staticVoltage':v.s_voltage,'rotationalVoltage':v.r_voltage})
 
 
